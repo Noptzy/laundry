@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model tb_user {
+  id       Int     @id @default(autoincrement())
+  nama     String  @db.VarChar(100)
+  username String  @db.VarChar(30) @unique
+  password String
+  role     Role @default(member)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt()
+
+  transaksi tb_transaksi[]
+}
+
+
+model tb_paket {
+  id         Int     @id @default(autoincrement())
+  jenis      JenisPaket
+  nama_paket String  @db.VarChar(100)
+  harga      Int
+
+  detailTransaksi tb_detail_transaksi[]
+}
+
+model tb_member {
+  id           Int     @id @default(autoincrement())
+  nama         String  @db.VarChar(100)
+  alamat       String
+  jenis_kelamin Gender
+  tlp          String  @db.VarChar(15)
+
+  transaksi    tb_transaksi[]
+}
+
+model tb_transaksi {
+  id            Int     @id @default(autoincrement())
+  kode_invoice  String  @db.VarChar(100) @unique
+  id_member     Int
+  tgl           DateTime
+  batas_waktu   DateTime
+  tgl_bayar     DateTime?
+  biaya_tambahan Int
+  diskon        Float
+  pajak         Int
+  status        Status
+  dibayar       Dibayar
+  id_user       Int
+  member        tb_member @relation(fields: [id_member], references: [id])
+  user          tb_user   @relation(fields: [id_user], references: [id])
+  detailTransaksi tb_detail_transaksi[]
+}
+
+model tb_detail_transaksi {
+  id          Int     @id @default(autoincrement())
+  id_transaksi Int
+  id_paket    Int
+  qty         Float
+  keterangan  String?
+
+  transaksi  tb_transaksi @relation(fields: [id_transaksi], references: [id])
+  paket      tb_paket @relation(fields: [id_paket], references: [id])
+}
+
+enum Role {
+  admin
+  kasir
+  member
+}
+
+enum JenisPaket {
+  kiloan
+  selimut
+  bed_cover
+  kaos
+  lain
+}
+
+enum Gender {
+  L
+  P
+}
+
+enum Status {
+  baru
+  proses
+  selesai
+  diambil
+}
+
+enum Dibayar {
+  dibayar
+  belum_dibayar
+}
