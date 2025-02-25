@@ -26,6 +26,15 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const user = await userService.getUserById(req.params.id);
+
+    if(!user){
+      return res.status(404).json({
+        success:false,
+        message:"User Not Found",
+        code:404
+      })
+    }
+
     res.status(200).json({
       success: true,
       message: "Successfully Get User Data",
@@ -47,6 +56,7 @@ exports.getUserById = async (req, res) => {
 // Update Users API
 exports.updateUser = async (req, res) => {
   try {
+
     const user = await userService.updateUser(req.params.id, req.body);
     res.status(201).json({
       success: true,
@@ -121,9 +131,6 @@ exports.deleteUser = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "User deleted",
-      data: {
-        user,
-      },
       code: 200,
     });
   } catch (error) {

@@ -10,8 +10,7 @@ const getUserById = async (id) => {
 };
 
 const createUser = async (data) => {
-
-  const hashedPassword = await bcrypt.hash(data.password, 10); // Ambil password dari data
+  const hashedPassword = await bcrypt.hash(data.password, 10);
   const userData = {
     nama: data.nama,
     username: data.username,
@@ -25,10 +24,18 @@ const createUser = async (data) => {
   return await prisma.tb_user.create({ data: userData });
 };
 
-const updateUser = async (id, data) => {
+const updateUser = async (id, data) => {  
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  let userData = {
+    ...data
+  };
+  if(data.password ){
+    userData.password = await bcrypt.hash(data.password, 10)
+  }
   return await prisma.tb_user.update({
     where: { id: Number(id) },
-    data,
+    data: userData,
   });
 };
 
