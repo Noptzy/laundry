@@ -34,7 +34,6 @@ exports.updateUser = async (req, res) => {
       updateData.foto_profile = req.file.filename;
     }
 
-    // 🔹 Validasi Role
     if (role) {
       if (!Object.values(Role).includes(role)) {
         return res.status(400).json({
@@ -109,14 +108,14 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// GET ALL USERS
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany();
     res.status(200).json({
       success: true,
-      message: "Berhasil mendapatkan semua data user",
-      data: users,
+      message: "Succesfully Get All users",
+      data: {users},
       code: 200,
     });
   } catch (error) {

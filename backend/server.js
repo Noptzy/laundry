@@ -3,6 +3,7 @@ require("dotenv").config();
 const bodyParser = require('body-parser')
 const cors = require("cors");
 const userRoutes  = require('./src/routes/Routes.js')
+const path = require('path')
 
 const app = express();
 const port = process.env.PORT;
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 app.use('/api/users', userRoutes)
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname,"uploads")));
 
 app.listen(port, () => {
   console.log(`server running at port ${port}`);
