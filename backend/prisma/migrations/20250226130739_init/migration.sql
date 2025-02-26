@@ -1,12 +1,15 @@
 -- CreateTable
-CREATE TABLE `tb_user` (
+CREATE TABLE `user` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nama` VARCHAR(100) NOT NULL,
-    `username` VARCHAR(30) NOT NULL,
+    `name` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(30) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
-    `role` ENUM('admin', 'kasir', 'member') NOT NULL,
+    `role` ENUM('admin', 'kasir', 'member') NOT NULL DEFAULT 'member',
+    `foto_profile` VARCHAR(255) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `tb_user_username_key`(`username`),
+    UNIQUE INDEX `user_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -65,7 +68,7 @@ CREATE TABLE `tb_detail_transaksi` (
 ALTER TABLE `tb_transaksi` ADD CONSTRAINT `tb_transaksi_id_member_fkey` FOREIGN KEY (`id_member`) REFERENCES `tb_member`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `tb_transaksi` ADD CONSTRAINT `tb_transaksi_id_user_fkey` FOREIGN KEY (`id_user`) REFERENCES `tb_user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `tb_transaksi` ADD CONSTRAINT `tb_transaksi_id_user_fkey` FOREIGN KEY (`id_user`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `tb_detail_transaksi` ADD CONSTRAINT `tb_detail_transaksi_id_transaksi_fkey` FOREIGN KEY (`id_transaksi`) REFERENCES `tb_transaksi`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
